@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>AD Training</title>
+<meta name="description" content="Personal workout and nutrition tracker">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AD Training">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="logo"><b>AD</b> Training</div>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<main id="main">
+
+  <!-- ========== TODAY ========== -->
+  <section class="panel active" id="panel-today">
+    <div class="stat-row" id="snapshotStats"></div>
+
+    <h2 class="section">Today's Sessions</h2>
+    <div id="todaySessions"></div>
+
+    <h2 class="section">Fuel</h2>
+    <div class="card" id="todayFuel"></div>
+  </section>
+
+  <!-- ========== TRAIN ========== -->
+  <section class="panel" id="panel-train">
+    <div class="seg" id="trainSeg">
+      <button data-sess="am" class="active">AM Session</button>
+      <button data-sess="pm">PM Session</button>
+    </div>
+    <div class="ex-chips" id="exChips"></div>
+    <div id="trainBody"></div>
+
+    <div class="timer-wrap card" id="timerWrap">
+      <div class="timer-ring">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle class="track" cx="75" cy="75" r="66" stroke-width="8" fill="none"></circle>
+          <circle class="prog" id="timerProg" cx="75" cy="75" r="66" stroke-width="8" fill="none"
+                  stroke-dasharray="414.7" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="timer-num"><span id="timerNum">0:00</span><small>Rest</small></div>
+      </div>
+      <div class="timer-controls">
+        <button id="timerMinus">−15s</button>
+        <button id="timerPlus">+15s</button>
+        <button class="skip" id="timerSkip">Skip</button>
+      </div>
+    </div>
+
+    <h2 class="section">Logged Today</h2>
+    <div class="set-list" id="setHistory"></div>
+  </section>
+
+  <!-- ========== FOOD ========== -->
+  <section class="panel" id="panel-food">
+    <div class="card" id="foodBars"></div>
+
+    <h2 class="section">Quick Add</h2>
+    <div id="quickFoods"></div>
+
+    <h2 class="section">Custom Entry</h2>
+    <div class="card">
+      <div class="input-row"><input type="text" id="cfName" placeholder="Food name" autocomplete="off"></div>
+      <div class="input-row">
+        <input type="number" id="cfKcal" placeholder="kcal" inputmode="numeric" min="0">
+        <input type="number" id="cfProt" placeholder="protein g" inputmode="numeric" min="0">
+      </div>
+      <div class="two-btns">
+        <button class="btn small ghost" id="cfLogOnce">Log once</button>
+        <button class="btn small" id="cfLogSave">Log + save</button>
+      </div>
+    </div>
+
+    <h2 class="section">Today's Log</h2>
+    <div id="foodLog"></div>
+  </section>
+
+  <!-- ========== PROGRESS ========== -->
+  <section class="panel" id="panel-progress">
+    <h2 class="section">Body</h2>
+    <div id="metricCards"></div>
+
+    <h2 class="section">Weekly Entry</h2>
+    <div class="card">
+      <div class="form-grid">
+        <div><label for="inWeight">Weight kg</label><input type="number" id="inWeight" inputmode="decimal" step="0.1" min="0" placeholder="—"></div>
+        <div><label for="inMuscle">Muscle kg</label><input type="number" id="inMuscle" inputmode="decimal" step="0.1" min="0" placeholder="—"></div>
+        <div><label for="inFat">Fat %</label><input type="number" id="inFat" inputmode="decimal" step="0.1" min="0" placeholder="—"></div>
+      </div>
+      <button class="btn small" id="saveMetrics">Save Entry</button>
+    </div>
+
+    <h2 class="section">Strength Trend</h2>
+    <div class="card" id="strengthCard"></div>
+  </section>
+
+  <!-- ========== PLAN ========== -->
+  <section class="panel" id="panel-plan">
+    <div class="day-chips" id="dayChips"></div>
+    <div id="planDay"></div>
+
+    <h2 class="section">Exercise Library</h2>
+    <button class="btn ghost" id="openLibrary">Browse Library</button>
+
+    <h2 class="section">Targets &amp; Goals</h2>
+    <div class="card">
+      <div class="settings-grid">
+        <div><label for="tKcal">Daily kcal</label><input type="number" id="tKcal" inputmode="numeric" min="0"></div>
+        <div><label for="tProt">Daily protein g</label><input type="number" id="tProt" inputmode="numeric" min="0"></div>
+        <div><label for="tWeight">Goal weight kg</label><input type="number" id="tWeight" inputmode="decimal" step="0.1" min="0"></div>
+        <div><label for="tMuscle">Goal muscle kg</label><input type="number" id="tMuscle" inputmode="decimal" step="0.1" min="0"></div>
+        <div><label for="tFat">Goal body fat %</label><input type="number" id="tFat" inputmode="decimal" step="0.1" min="0"></div>
+      </div>
+      <button class="btn small" id="saveTargets">Save Targets</button>
+    </div>
+
+    <h2 class="section">Data</h2>
+    <div class="card">
+      <div class="two-btns" style="margin-bottom:8px">
+        <button class="btn small ghost" id="btnExport">Export JSON</button>
+        <button class="btn small ghost" id="btnImport">Import JSON</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+      <button class="btn small danger" id="btnReset">Reset All Data</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ========== LIBRARY MODAL ========== -->
+<div class="modal" id="libModal">
+  <div class="sheet">
+    <div class="sheet-head">
+      <h3 id="libTitle">Exercise Library</h3>
+      <button class="sheet-close" id="libClose">✕</button>
+    </div>
+    <input type="search" id="libSearch" placeholder="Search exercises…" autocomplete="off">
+    <div class="chips" id="libChips"></div>
+    <div class="lib-list" id="libList"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<nav id="nav">
+  <button data-tab="today" class="active">
+    <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>
+    Today
+  </button>
+  <button data-tab="train">
+    <svg viewBox="0 0 24 24"><path d="M2 12h2m16 0h2M6 8v8M18 8v8M9 6.5v11M15 6.5v11M9 12h6"/></svg>
+    Train
+  </button>
+  <button data-tab="food">
+    <svg viewBox="0 0 24 24"><path d="M7 3v7a2.5 2.5 0 0 0 5 0V3M9.5 3v18M17 3c-1.7 1-2.5 3.4-2.5 6.5 0 2 .8 3 2.5 3v8.5"/></svg>
+    Food
+  </button>
+  <button data-tab="progress">
+    <svg viewBox="0 0 24 24"><path d="M3 20h18M5 16l4-5 4 3 6-8"/></svg>
+    Progress
+  </button>
+  <button data-tab="plan">
+    <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>
+    Plan
+  </button>
+</nav>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
