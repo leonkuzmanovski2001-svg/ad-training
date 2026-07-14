@@ -2,7 +2,7 @@
    Bump CACHE_VERSION on every deploy to invalidate old caches. */
 'use strict';
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `adtrain-${CACHE_VERSION}`;
 const FONT_CACHE = `adtrain-fonts-${CACHE_VERSION}`;
 
@@ -21,7 +21,13 @@ const SHELL = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache =>
+      // bypass the HTTP cache so a version bump always ships fresh files
+      Promise.all(SHELL.map(u => fetch(u, { cache: 'reload' }).then(res => {
+        if (!res.ok) throw new Error('install fetch failed: ' + u);
+        return cache.put(u, res);
+      })))
+    ).then(() => self.skipWaiting())
   );
 });
 
