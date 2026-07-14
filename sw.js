@@ -42,7 +42,8 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       caches.open(FONT_CACHE).then(cache =>
         cache.match(event.request).then(hit => hit || fetch(event.request).then(res => {
-          if (res.ok) cache.put(event.request, res.clone());
+          // opaque (no-cors) responses have ok=false but are still cacheable
+          if (res.ok || res.type === 'opaque') cache.put(event.request, res.clone());
           return res;
         }))
       )
